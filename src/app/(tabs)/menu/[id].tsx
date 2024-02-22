@@ -1,33 +1,33 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Pressable,
-} from 'react-native';
-import React, { useState } from 'react';
-import { Stack, useLocalSearchParams } from 'expo-router';
-import { defaultPizzaImage } from '@constants/Images/defaultPizzaImage';
-import Button from '@components/Button';
-import { useCart } from '@providers/CartProvider';
-import { PizzaSize } from '@types';
+import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import React, { useState } from "react";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { defaultPizzaImage } from "@constants/Images/defaultPizzaImage";
+import Button from "@components/Button";
+import { useCart } from "@providers/CartProvider";
+import { PizzaSize } from "@types";
 // import { useProduct } from '@api/products';
-import products from '@assets/data/products';
+import products from "@assets/data/products";
 
-const sizes: PizzaSize[] = ['S', 'M', 'L', 'XL'];
+const sizes: PizzaSize[] = ["S", "M", "L", "XL"];
 
 const ProductDetailsScreen = () => {
   const { id } = useLocalSearchParams();
   const { addItem } = useCart();
 
-  const [selectedSize, setSelectedSize] = useState<PizzaSize>('M');
+  const router = useRouter();
+
+  const [selectedSize, setSelectedSize] = useState<PizzaSize>("M");
 
   const product = products.find((p) => p.id.toString() === id);
 
+  if (!product) {
+    return <Text>Product not found</Text>;
+  }
+
   const addToCart = () => {
     if (!product) return;
-    console.log("Da");
     addItem(product, selectedSize);
+    router.push("/cart");
   };
 
   return (
@@ -38,7 +38,7 @@ const ProductDetailsScreen = () => {
         style={styles.image}
         resizeMode="contain"
       />
-      
+
       <Text style={styles.subtitle}>Select size</Text>
       <View style={styles.sizes}>
         {sizes.map((size) => (
@@ -48,14 +48,14 @@ const ProductDetailsScreen = () => {
             style={[
               styles.size,
               {
-                backgroundColor: size === selectedSize ? 'gainsboro' : 'white',
+                backgroundColor: size === selectedSize ? "gainsboro" : "white",
               },
             ]}
           >
             <Text
               style={[
                 styles.sizeText,
-                { color: size === selectedSize ? 'black' : 'gray' },
+                { color: size === selectedSize ? "black" : "gray" },
               ]}
             >
               {size}
@@ -70,40 +70,40 @@ const ProductDetailsScreen = () => {
 };
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 10,
     flex: 1,
   },
   image: {
-    width: '100%',
+    width: "100%",
     aspectRatio: 1,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   subtitle: {
     marginVertical: 10,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   price: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 'auto',
+    fontWeight: "bold",
+    marginTop: "auto",
   },
 
   sizes: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
   },
   size: {
     width: 50,
     aspectRatio: 1,
     borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   sizeText: {
     fontSize: 20,
-    fontWeight: '500',
-    color: 'black',
+    fontWeight: "500",
+    color: "black",
   },
 });
 
