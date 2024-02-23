@@ -1,18 +1,12 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
-import React, { useState } from "react";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { View, Text, StyleSheet, Image} from "react-native";
+import React from "react";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { defaultPizzaImage } from "@constants/Images/defaultPizzaImage";
-import Button from "@components/Button";
-import { useCart } from "@providers/CartProvider";
-import { PizzaSize } from "@types";
 // import { useProduct } from '@api/products';
 import products from "@assets/data/products";
 
 const ProductDetailsScreen = () => {
   const { id } = useLocalSearchParams();
-  const { addItem } = useCart();
-
-  const router = useRouter();
 
   const product = products.find((p) => p.id.toString() === id);
 
