@@ -1,9 +1,11 @@
-import { View, Text, StyleSheet, Image} from "react-native";
+import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 import React from "react";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { defaultPizzaImage } from "@constants/Images/defaultPizzaImage";
 // import { useProduct } from '@api/products';
 import products from "@assets/data/products";
+import { FontAwesome } from "@expo/vector-icons";
+import Colors from "@constants/Colors";
 
 const ProductDetailsScreen = () => {
   const { id } = useLocalSearchParams();
@@ -14,9 +16,28 @@ const ProductDetailsScreen = () => {
     return <Text>Product not found</Text>;
   }
 
-
   return (
     <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          title: "Menu",
+          headerRight: () => (
+            <Link href={`/(admin)/menu/create?id=${id}`} asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <FontAwesome
+                    name="pencil"
+                    size={25}
+                    color={Colors.light.tint}
+                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                  />
+                )}
+              </Pressable>
+            </Link>
+          ),
+        }}
+      />
+
       <Stack.Screen options={{ title: product.name }} />
       <Image
         source={{ uri: product.image || defaultPizzaImage }}
