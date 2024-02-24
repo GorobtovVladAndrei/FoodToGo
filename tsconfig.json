@@ -9,6 +9,18 @@
       "@constants/*": ["./src/constants/*"],
       "@types": ["./src/types.ts"],
       "@providers/*": ["./src/providers/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@services/*": ["./src/services/*"],
+      "@screens/*": ["./src/screens/*"],
+      "@navigation/*": ["./src/navigation/*"],
+      "@theme/*": ["./src/theme/*"],
+      "@store/*": ["./src/store/*"],
+      "@i18n/*": ["./src/i18n/*"],
+      "@graphql/*": ["./src/graphql/*"],
+      "@api/*": ["./src/api/*"],
+      "@lib/*": ["./src/lib/*"],
+
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
