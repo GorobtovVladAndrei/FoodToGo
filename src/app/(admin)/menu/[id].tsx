@@ -2,18 +2,27 @@ import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 import React from "react";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { defaultPizzaImage } from "@constants/Images/defaultPizzaImage";
-// import { useProduct } from '@api/products';
-import products from "@assets/data/products";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "@constants/Colors";
+import { useProduct } from "@api/products";
+import LoadingAnimation from "@/src/components/LoadingAnimation";
 
 const ProductDetailsScreen = () => {
-  const { id } = useLocalSearchParams();
+  const { id: idString } = useLocalSearchParams();
+  const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
 
-  const product = products.find((p) => p.id.toString() === id);
+  const { data: product, error, isLoading } = useProduct(id);
 
   if (!product) {
     return <Text>Product not found</Text>;
+  }
+
+  if (isLoading) {
+    return <LoadingAnimation text="Loading product info.." />;
+  }
+
+  if (error) {
+    return <Text>Failed to fetch data</Text>;
   }
 
   return (
