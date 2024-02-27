@@ -20,6 +20,7 @@
       "@graphql/*": ["./src/graphql/*"],
       "@api/*": ["./src/api/*"],
       "@lib/*": ["./src/lib/*"],
+      "@database": ["./src/database.types.ts"],
 
     }
   },
