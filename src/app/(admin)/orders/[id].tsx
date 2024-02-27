@@ -1,29 +1,42 @@
 import React from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { Stack, useLocalSearchParams } from "expo-router";
-import orders from "@assets/data/orders";
 import OrderListItem from "@components/OrderListItem";
 import OrderItemListItem from "@components/OrderItemListItem";
-import { OrderStatusList } from "@/src/types";
+import { OrderStatusList } from "@types";
 import Colors from "@constants/Colors";
+import { useOrderDetails, useUpdateOrder } from "@api/orders";
+import LoadingAnimation from "@components/LoadingAnimation";
 
 export default function OrderDetailsScreen() {
-  const { id } = useLocalSearchParams();
+  const { id: idString } = useLocalSearchParams();
+  const id = parseFloat(
+    typeof idString === "string" ? idString : idString?.[0]
+  );
 
-  const order = orders.find((order) => order.id.toString() === id);
+  const { data: order, isLoading, error } = useOrderDetails(id);
+  const { mutate: updateOrder } = useUpdateOrder();
 
-  if (!order) {
-    return <Text>Order not found</Text>;
+  const updateStatus = (status: string) => {
+    updateOrder({ id: id, updatedFields: { status } });
+  };
+
+  if (isLoading) {
+    return <LoadingAnimation text="Loading order.." />;
+  }
+
+  if (error || !order) {
+    return <Text>Failed to fetch</Text>;
   }
 
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: `Order #${id}` }} />
-      <OrderListItem order={order} />
       <FlatList
         data={order.order_items}
         renderItem={({ item }) => <OrderItemListItem item={item} />}
         contentContainerStyle={{ gap: 10 }}
+        ListHeaderComponent={() => <OrderListItem order={order} />}
         ListFooterComponent={() => (
           <>
             <Text style={{ fontWeight: "bold" }}>Status</Text>
@@ -31,7 +44,7 @@ export default function OrderDetailsScreen() {
               {OrderStatusList.map((status) => (
                 <Pressable
                   key={status}
-                  onPress={() => console.warn("Update status")}
+                  onPress={() => updateStatus(status)}
                   style={{
                     borderColor: Colors.light.tint,
                     borderWidth: 1,
